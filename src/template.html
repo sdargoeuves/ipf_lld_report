@@ -27,10 +27,6 @@
         into
         various sections such as network inventory, interfaces, addressing, switching, routing, and wireless
         technologies.
-        <br><br>
-        The report is generated based on two snapshots, showcasing the values of the first snapshot and the delta value
-        (+/-) compared to the second snapshot. This approach allows network engineers and administrators to track the
-        changes and improvements made to the network over time.
       </div>
     </div>
     <div class="main-title-container">
@@ -47,45 +43,36 @@
         <td>{{ os_version }}</td>
       </tr>
       <tr>
-        <th>Snapshot Name #1</th>
+        <th>Snapshot Name</th>
         <td>{{ snapshot_name }}</td>
       </tr>
       <tr>
-        <th>Snapshot ID #1</th>
+        <th>Snapshot ID</th>
         <td>{{ snapshot_id }}</td>
       </tr>
       <tr>
-        <th>Snapshot Name #2</th>
-        <td>{{ snapshot_name_prev }}</td>
-      </tr>
-      <tr>
-        <th>Snapshot ID #2</th>
-        <td>{{ snapshot_id_prev }}</td>
-      </tr>
-      <tr>
         <th>Network sites/groups</th>
-        <td>{{ network_sites }} ({% if network_sites_delta > 0 %}+{% endif %}{{ network_sites_delta }})</td>
+        <td>{{ network_sites }} {% if network_sites_delta is defined %}({% if network_sites_delta > 0 %}+{% endif %}{{ network_sites_delta }}){% endif %}</td>
       </tr>
       <tr>
         <th>Network devices</th>
-        <td>{{ network_devices }} ({% if network_devices_delta > 0 %}+{% endif %}{{ network_devices_delta }})</td>
+        <td>{{ network_devices }} {% if network_devices_delta is defined %}({% if network_devices_delta > 0 %}+{% endif %}{{ network_devices_delta }}){% endif %}</td>
       </tr>
       <tr>
         <th>Network interfaces</th>
-        <td>{{ network_interfaces }} ({% if network_interfaces_delta > 0 %}+{% endif %}{{ network_interfaces_delta }})
-        </td>
+        <td>{{ network_interfaces }} {% if network_interfaces_delta is defined %}({% if network_interfaces_delta > 0 %}+{% endif %}{{ network_interfaces_delta }}){% endif %}</td>
       </tr>
       <tr>
         <th>Network hosts/IP endpoints</th>
-        <td>{{ network_hosts }} ({% if network_hosts_delta > 0 %}+{% endif %}{{ network_hosts_delta }})</td>
+        <td>{{ network_hosts }} {% if network_hosts_delta is defined %}({% if network_hosts_delta > 0 %}+{% endif %}{{ network_hosts_delta }}){% endif %}</td>
       </tr>
       <tr>
         <th>VLANs</th>
-        <td>{{ vlans }} ({% if vlans_delta > 0 %}+{% endif %}{{ vlans_delta }})</td>
+        <td>{{ vlans }} {% if vlans_delta is defined %}({% if vlans_delta > 0 %}+{% endif %}{{ vlans_delta }}){% endif %}</td>
       </tr>
       <tr>
         <th>VRFs</th>
-        <td>{{ vrfs }} ({% if vrfs_delta > 0 %}+{% endif %}{{ vrfs_delta }})</td>
+        <td>{{ vrfs }} {% if vrfs_delta is defined %}({% if vrfs_delta > 0 %}+{% endif %}{{ vrfs_delta }}){% endif %}</td>
       </tr>
     </table>
     <div class="main-title-container">
@@ -107,10 +94,8 @@
         <tbody>
         {% for vendor in vendors %}
           <tr>
-            <td class="table-cell-width">{{ vendor.devicesCount }} ({{ vendor.devicesCount -
-              vendors_prev[loop.index0].devicesCount }})</td>
-            <td class="table-cell-width">{{ vendor.familiesCount }} ({{ vendor.familiesCount -
-              vendors_prev[loop.index0].familiesCount }})</td>
+            <td class="table-cell-width">{{ vendor.devicesCount }}</td>
+            <td class="table-cell-width">{{ vendor.familiesCount }}</td>
           </tr>
         {% endfor %}
         </tbody>
@@ -125,10 +110,8 @@
           {% for vendor in vendors %}
           <tr>
             <td class="table-cell-width">{{ vendor.vendor }}</td>
-            <td class="table-cell-width">{{ vendor.modelsCount }} ({{ vendor.modelsCount -
-              vendors_prev[loop.index0].modelsCount }})</td>
-            <td class="table-cell-width">{{ vendor.platformsCount }} ({{ vendor.platformsCount -
-              vendors_prev[loop.index0].platformsCount }})</td>
+            <td class="table-cell-width">{{ vendor.modelsCount }}</td>
+            <td class="table-cell-width">{{ vendor.platformsCount }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -142,51 +125,45 @@
       The Interfaces overview section provides insights into the network interfaces of the infrastructure. It reports on
       the total number of active interfaces, the number of edge interfaces, and the number of switchport interfaces. It
       also includes information on channel interfaces and the number of IPv4 and IPv6 tunnel interfaces. Finally, it
-      provides details on the number of IPsec tunnels and gateways. The delta values indicate changes between two
-      snapshots, highlighting any new or removed interfaces in the network.
+      provides details on the number of IPsec tunnels and gateways.
     </div>
     <table>
       <tr>
         <th>Network interfaces</th>
-        <td>{{ network_interfaces }} ({% if network_interfaces_delta > 0 %}+{% endif %}{{ network_interfaces_delta }})
-        </td>
+        <td>{{ network_interfaces }} 
+      </td>
       </tr>
       <tr>
         <th>Active interfaces</th>
-        <td>{{ interfaces_active }} ({% if interfaces_active_delta > 0 %}+{% endif %}{{ interfaces_active_delta }})</td>
+        <td>{{ interfaces_active }}</td>
       </tr>
       <tr>
         <th>Edge interfaces</th>
-        <td>{{ interfaces_edge }} ({% if interfaces_edge_delta > 0 %}+{% endif %}{{ interfaces_edge_delta }})</td>
+        <td>{{ interfaces_edge }}</td>
       </tr>
       <tr>
         <th>Switchport interfaces</th>
-        <td>{{ interfaces_switchport }} ({% if interfaces_switchport_delta > 0 %}+{% endif %}{{
-          interfaces_switchport_delta }})</td>
+        <td>{{ interfaces_switchport }}</td>
       </tr>
       <tr>
         <th>Channel interfaces</th>
-        <td>{{ interfaces_channels }} ({% if interfaces_channels_delta > 0 %}+{% endif %}{{ interfaces_channels_delta
-          }})
-        </td>
+        <td>{{ interfaces_channels }}</td>
       </tr>
       <tr>
         <th>IPv4 Tunnel interfaces</th>
-        <td>{{ interfaces_tunnels_ipv4 }} ({% if interfaces_tunnels_ipv4_delta > 0 %}+{% endif %}{{
-          interfaces_tunnels_ipv4_delta }})</td>
+        <td>{{ interfaces_tunnels_ipv4 }}</td>
       </tr>
       <tr>
         <th>IPv6 Tunnel interfaces</th>
-        <td>{{ interfaces_tunnels_ipv6 }} ({% if interfaces_tunnels_ipv6_delta > 0 %}+{% endif %}{{
-          interfaces_tunnels_ipv6_delta }})</td>
+        <td>{{ interfaces_tunnels_ipv6 }}</td>
       </tr>
       <tr>
         <th>IPsec Gateways</th>
-        <td>{{ ipsec_gateways }} ({% if ipsec_gateways_delta > 0 %}+{% endif %}{{ ipsec_gateways_delta }})</td>
+        <td>{{ ipsec_gateways }}</td>
       </tr>
       <tr>
         <th>IPsec tunnels</th>
-        <td>{{ ipsec_tunnels }} ({% if ipsec_tunnels_delta > 0 %}+{% endif %}{{ ipsec_tunnels_delta }})</td>
+        <td>{{ ipsec_tunnels }}</td>
       </tr>
     </table>
     <div class="main-title-container">
@@ -203,27 +180,27 @@
     <table>
       <tr>
         <th>Managed networks</th>
-        <td>{{ managed_networks }} ({% if managed_networks_delta > 0 %}+{% endif %}{{ managed_networks_delta }})</td>
+        <td>{{ managed_networks }}</td>
       </tr>
       <tr>
         <th>VRFs</th>
-        <td>{{ vrfs }} ({% if vrfs_delta > 0 %}+{% endif %}{{ vrfs_delta }})</td>
+        <td>{{ vrfs }}</td>
       </tr>
       <tr>
         <th>IPv4 interfaces</th>
-        <td>{{ ipv4_interfaces }} ({% if ipv4_interfaces_delta > 0 %}+{% endif %}{{ ipv4_interfaces_delta }})</td>
+        <td>{{ ipv4_interfaces }}</td>
       </tr>
       <tr>
         <th>IPv6 interfaces</th>
-        <td>{{ ipv6_interfaces }} ({% if ipv6_interfaces_delta > 0 %}+{% endif %}{{ ipv6_interfaces_delta }})</td>
+        <td>{{ ipv6_interfaces }}</td>
       </tr>
       <tr>
         <th>ARP entries</th>
-        <td>{{ arp }} ({% if arp_delta > 0 %}+{% endif %}{{ arp_delta }})</td>
+        <td>{{ arp }}</td>
       </tr>
       <tr>
         <th>MAC entries</th>
-        <td>{{ mac }} ({% if mac_delta > 0 %}+{% endif %}{{ mac_delta }})</td>
+        <td>{{ mac }}</td>
       </tr>
     </table>
     <div class="main-title-container">
@@ -234,38 +211,35 @@
       The Switching overview section provides key statistics on the status of network switching components. These
       include
       data on MAC addresses, VLANs, and Spanning Tree Protocol (STP) instances, bridges, virtual ports, and neighbors.
-      The
-      data is presented in two numbers: the first value represents the initial snapshot, and the second value (+X)
-      represents the difference between the current snapshot and the previous one.
     </div>
     <table>
       <tr>
         <th>MAC entries</th>
-        <td>{{ mac }} ({% if mac_delta > 0 %}+{% endif %}{{ mac_delta }})</td>
+        <td>{{ mac }}</td>
       </tr>
       <tr>
         <th>VLANs</th>
-        <td>{{ vlans }} ({% if vlans_delta > 0 %}+{% endif %}{{ vlans_delta }})</td>
+        <td>{{ vlans }}</td>
       </tr>
       <tr>
         <th>STP VLANs</th>
-        <td>{{ stp_vlans }} ({% if stp_vlans_delta > 0 %}+{% endif %}{{ stp_vlans_delta }})</td>
+        <td>{{ stp_vlans }}</td>
       </tr>
       <tr>
         <th>STP Bridges</th>
-        <td>{{ stp_bridges }} ({% if stp_bridges_delta > 0 %}+{% endif %}{{ stp_bridges_delta }})</td>
+        <td>{{ stp_bridges }}</td>
       </tr>
       <tr>
         <th>STP Virtual Ports</th>
-        <td>{{ stp_virtual_ports }} ({% if stp_virtual_ports_delta > 0 %}+{% endif %}{{ stp_virtual_ports_delta }})</td>
+        <td>{{ stp_virtual_ports }}</td>
       </tr>
       <tr>
         <th>STP Instances</th>
-        <td>{{ stp_instances }} ({% if stp_instances_delta > 0 %}+{% endif %}{{ stp_instances_delta }})</td>
+        <td>{{ stp_instances }}</td>
       </tr>
       <tr>
         <th>STP Neighbors</th>
-        <td>{{ stp_neighbors }} ({% if stp_neighbors_delta > 0 %}+{% endif %}{{ stp_neighbors_delta }})</td>
+        <td>{{ stp_neighbors }}</td>
       </tr>
     </table>
     <div class="main-title-container">
@@ -283,47 +257,47 @@
     <table>
       <tr>
         <th>IPv4 routes</th>
-        <td>{{ routes_ipv4 }} ({% if routes_ipv4_delta > 0 %}+{% endif %}{{ routes_ipv4_delta }})</td>
+        <td>{{ routes_ipv4 }}</td>
       </tr>
 
       <tr>
         <th>IPv6 routes</th>
-        <td>{{ routes_ipv6 }} ({% if routes_ipv6_delta > 0 %}+{% endif %}{{ routes_ipv6_delta }})</td>
+        <td>{{ routes_ipv6 }}</td>
       </tr>
       <tr>
         <th>Multicast routes</th>
-        <td>{{ routes_multicast }} ({% if routes_multicast_delta > 0 %}+{% endif %}{{ routes_multicast_delta }})</td>
+        <td>{{ routes_multicast }}</td>
       </tr>
       <tr>
         <th>Attached routes</th>
-        <td>{{ routes_attached }} ({% if routes_attached_delta > 0 %}+{% endif %}{{ routes_attached_delta }})</td>
+        <td>{{ routes_attached }}</td>
       </tr>
       <tr>
         <th>BGP routes</th>
-        <td>{{ routes_bgp }} ({% if routes_bgp_delta > 0 %}+{% endif %}{{ routes_bgp_delta }})</td>
+        <td>{{ routes_bgp }}</td>
       </tr>
       <tr>
         <th>Connected routes</th>
-        <td>{{ routes_connected }} ({% if routes_connected_delta > 0 %}+{% endif %}{{ routes_connected_delta }})</td>
+        <td>{{ routes_connected }}</td>
       <tr>
         <th>EIGRP routes</th>
-        <td>{{ routes_eigrp }} ({% if routes_eigrp_delta > 0 %}+{% endif %}{{ routes_eigrp_delta }})</td>
+        <td>{{ routes_eigrp }}</td>
       </tr>
       <tr>
         <th>ISIS routes</th>
-        <td>{{ routes_isis }} ({% if routes_isis_delta > 0 %}+{% endif %}{{ routes_isis_delta }})</td>
+        <td>{{ routes_isis }}</td>
       </tr>
       <tr>
         <th>OSPF routes</th>
-        <td>{{ routes_ospf }} ({% if routes_ospf_delta > 0 %}+{% endif %}{{ routes_ospf_delta }})</td>
+        <td>{{ routes_ospf }}</td>
       </tr>
       <tr>
         <th>RIP routes</th>
-        <td>{{ routes_rip }} ({% if routes_rip_delta > 0 %}+{% endif %}{{ routes_rip_delta }})</td>
+        <td>{{ routes_rip }}</td>
       </tr>
       <tr>
         <th>Static routes</th>
-        <td>{{ routes_static }} ({% if routes_static_delta > 0 %}+{% endif %}{{ routes_static_delta }})</td>
+        <td>{{ routes_static }}</td>
       </tr>
     </table>
     <div class="main-title-container">
@@ -332,50 +306,77 @@
     </div>
     <div class="section-7">
       The Wireless overview section provides statistical data about the wireless infrastructure within the network,
-      including controllers, access points, radios, and clients. The first number in each row represents the value from
-      the first snapshot, and the second number (+X) represents the delta value compared to the second snapshot
-      provided.
+      including controllers, access points, radios, and clients.
       This data can be used to gain insights into the overall performance and utilization of the wireless network
       infrastructure.
     </div>
     <table>
       <tr>
         <th>Wireless controllers</th>
-        <td>{{ wireless_controllers }} ({% if wireless_controllers_delta > 0 %}+{% endif %}{{ wireless_controllers_delta
-          }})</td>
+        <td>{{ wireless_controllers }}</td>
       </tr>
       <tr>
         <th>Wireless access points</th>
-        <td>{{ wireless_access_points }} ({% if wireless_access_points_delta > 0 %}+{% endif %}{{
-          wireless_access_points_delta }})</td>
+        <td>{{ wireless_access_points }}</td>
       </tr>
       <tr>
         <th>Wireless radios and SSID summary</th>
-        <td>{{ wireless_radios_ssid_summary }} ({% if wireless_radios_ssid_summary_delta > 0 %}+{% endif %}{{
-          wireless_radios_ssid_summary_delta }})</td>
+        <td>{{ wireless_radios_ssid_summary }}</td>
       </tr>
       <tr>
         <th>Wireless clients</th>
-        <td>{{ wireless_clients }} ({% if wireless_clients_delta > 0 %}+{% endif %}{{ wireless_clients_delta }})</td>
+        <td>{{ wireless_clients }}</td>
       </tr>
     </table>
     <div class="main-title-container">
       <div class="numbers">8</div>
       <h1 class="main-titles" style="page-break-before: always;">Simulation Compliance</h1>
     </div>
+    {% if path_context %}
+      <div class="section-8">
+        Path Compliance is a critical aspect of network management that helps ensure the proper functioning of network
+        paths
+        and their compliance with organizational policies. This section provides an overview of the compliance status of
+        network paths and associated details, such as source and destination IP addresses, ports, and protocols. The
+        section
+        includes a list of network paths that have been tested and their corresponding graphical representations in the
+        form
+        of SVG images. By analyzing the compliance data and SVG images, network administrators can identify and address
+        issues affecting the network's performance and security.
+      </div>
+      {% for params in path_context %}
+        <h4>Path simulation data</h4>
+        <table>
+          {% for key, value in params['data'].items() %}
+          <tr>
+            <th class="table-cell-width-even">{{ key|capitalize }}</th>
+            <td>{{ value }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        <h5>Path simulation result</h5>
+        <div class="path_svg">
+          <img src="{{ params['result']['svg'] }}" alt="Path result" style="width: 100%;">
+        </div>
+      {% endfor %}
+    {% else %}
     <div class="section-8">
-      Path Compliance is a critical aspect of network management that helps ensure the proper functioning of network
-      paths
-      and their compliance with organizational policies. This section provides an overview of the compliance status of
-      network paths and associated details, such as source and destination IP addresses, ports, and protocols. The
-      section
-      includes a list of network paths that have been tested and their corresponding graphical representations in the
-      form
-      of SVG images. By analyzing the compliance data and SVG images, network administrators can identify and address
-      issues affecting the network's performance and security.
+      No Pathlookup specified.
     </div>
-    {% for params in path_context %}
-      <h4>Path simulation data</h4>
+    {% endif %}
+    <div class="main-title-container">
+      <div class="numbers">9</div>
+      <h1 class="main-titles" style="page-break-before: always;">Site Topology</h1>
+    </div>
+    {% if topology_context %}
+    <div class="section-8">
+      Accurate network documentation is crucial for effective knowledge sharing among team members,
+      as well as for internal communication and audit purposes. In this section, you'll find topology
+      information for selected sites, along with SVG images that provide graphical representations of
+      the network.
+    </div>
+    {% for params in topology_context %}
+      <h4>Topology data</h4>
       <table>
         {% for key, value in params['data'].items() %}
         <tr>
@@ -384,11 +385,16 @@
         </tr>
         {% endfor %}
       </table>
-      <h5>Path simulation result</h5>
+      <h5>Topology diagram</h5>
       <div class="path_svg">
         <img src="{{ params['result']['svg'] }}" alt="Path result" style="width: 100%;">
       </div>
     {% endfor %}
+  {% else %}
+    <div class="section-8">
+      No Topology specified.
+    </div>
+  {% endif %}
   </div>
 </body>
 

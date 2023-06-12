@@ -1,4 +1,3 @@
-import time
 import json
 import requests
 from ipfabric import IPFClient
@@ -6,7 +5,7 @@ from ipfabric import IPFClient
 
 class DataSource:
     def __init__(self, server_url, token, snapshot_id):
-        self.ipf = IPFClient(server_url, token=token, snapshot_id=snapshot_id, verify=False, timeout=15)
+        self.ipf = IPFClient(server_url, auth=token, snapshot_id=snapshot_id, verify=False, timeout=15)
 
         # Network data summary
         self.system_url = self.ipf.base_url
@@ -128,4 +127,43 @@ class PathSimulation:
         # self.response = requests.request("POST", self.url, headers=self.headers, data=self.payload, verify=False)
         self.response_svg = requests.request("POST", self.url_svg, headers=self.headers, data=self.payload, verify=False)
 
+
+class Topology:
+    def __init__(self, server_url, token, params, snapshot_id):
+        def get_api_version(api_version_url: str, api_version_token: str) -> dict:
+            url = f"{api_version_url}/api/version"
+            headers = {
+                'Accept': 'application/json',
+                'X-API-Token': api_version_token
+            }
+
+            response = requests.request("GET", url, headers=headers, verify=False)
+
+            return response.json()
+
+        api_version = get_api_version(server_url, token)
+        self.url = f"{server_url}/api/{api_version['apiVersion']}/graphs/"
+        self.url_svg = f"{server_url}/api/{api_version['apiVersion']}/graphs/svg"
+        self.headers = {
+          'X-API-Token': token,
+          'Content-Type': 'application/json'
+        }
+        self.payload = json.dumps({
+            "parameters": {
+                "groupBy": "siteName",
+                "paths": params.get("siteName", ""),
+                "technologies": {
+                    "expandDeviceGroups": [],
+                    "stpInstances": {
+                        "isolate": False,
+                        "instances": []
+                    }
+                },
+                "type": "topology"
+            },
+            "snapshot": params.get('Snapshot ID', snapshot_id)
+        })
+
+        # self.response = requests.request("POST", self.url, headers=self.headers, data=self.payload, verify=False)
+        self.response_svg = requests.request("POST", self.url_svg, headers=self.headers, data=self.payload, verify=False)
 
