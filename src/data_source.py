@@ -4,18 +4,20 @@ from ipfabric import IPFClient
 
 
 class DataSource:
-    def __init__(self, server_url, token, snapshot_id):
+    def __init__(self, server_url, token, snapshot_id, site=None):
+        site_filter = {} if site is None else {"siteName": ["like", site]}
         self.ipf = IPFClient(server_url, auth=token, snapshot_id=snapshot_id, verify=False, timeout=15)
 
-        # Network data summary
+        # Instance Information
         self.system_url = self.ipf.base_url
         self.os_version = self.ipf.os_version
         self.snapshot_id = self.ipf.snapshots[snapshot_id].snapshot_id
         self.snapshot_name = self.ipf.snapshot.name
-        self.network_devices = self.ipf.inventory.devices.count()
-        self.network_interfaces = self.ipf.snapshot.interface_count
-        self.network_sites = self.ipf.inventory.sites.count()
-        self.network_hosts = self.ipf.inventory.hosts.count()
+        
+        # Network data summary
+        print(site_filter)
+        self.network_devices = self.ipf.inventory.devices.fetch(filters=site_filter, columns=["hostname", "fqdn", "domain"])
+        self.network_hosts = self.ipf.inventory.hosts.count(filters=site_filter)
 
         # Network vendors
         self.vendors = self.get_inventory().vendors.all()

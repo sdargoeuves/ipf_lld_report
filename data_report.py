@@ -9,14 +9,41 @@ import os
 from pathlib import Path
 from weasyprint import HTML
 
+def input_validation():
+    """
+    This function prompts the user to enter a string or a list of strings separated by commas, and validates the input.
+    If the input is a single string, it is returned with leading and trailing white space removed.
+    If the input is a list of strings, the list is returned.
+    If the input is invalid, the function prints an error message and prompts the user again.
+
+    Returns:
+    - str: if the user entered a single string
+    - list of str: if the user entered a list of strings
+    """
+    while True:
+        user_input = input("Enter a string or a list of strings separated by commas: ")
+        values = user_input.split(",")
+
+        # If the user entered only one value, remove leading/trailing white space
+        if len(values) == 1:
+            value = values[0].strip()
+            if isinstance(value, str):
+                print(f"You entered a string: {value}")
+                return value
+        elif all(isinstance(val.strip(), str) for val in values):
+            print(f"You entered a list of strings: {values}")
+            return value
+        print("Invalid input. Please enter a string or a list of strings separated by commas.")
 
 def main():
+    #Ask for the list of sites to generate the report for
+    input_site = input_validation()
     # Initialize DataSources with a token and server_url
     server_url = os.environ.get('IPF_URL')  # netsim
     token = os.environ.get('IPF_TOKEN')  # netsim
 
-    snapshot_id_01 = "$prev"
-    data_source = DataSource(server_url, token, snapshot_id_01)
+    snapshot_id = "$last"
+    data_source = DataSource(server_url, token, snapshot_id, input_site)
 
     # The time part
     current_time = datetime.now()
@@ -31,41 +58,13 @@ def main():
     env = Environment(loader=FileSystemLoader('.'))
     template = env.get_template('src/template.html')
 
-        # Path simulation parameters
-    path_params_list = [
-        {
-            'Name': 'APP server to LAN2',
-            'Source IP': '172.16.1.20',
-            'Destination IP': '172.16.2.20',
-            'Source port': '1024-65535',
-            'Destination port': '80,443',
-            'Snapshot ID': snapshot_id_01,
-            'Protocol': 'tcp',
-            'TTL': 64
-        },
-        {
-            'Name': 'Node1 to Node2 over VXLAN',
-            'Source IP': '172.16.5.21',
-            'Destination IP': '172.16.5.20',
-            'Source port': '1024-65535',
-            'Destination port': '80',
-            'Snapshot ID': snapshot_id_01,
-            'Protocol': 'tcp',
-            'TTL': 64
-        },
-    ]
     # Diagrams based on siteName
     topology_list = [
-        # {
-        #     "Name": "Site 35",
-        #     "groupBy": "siteName",
-        #     "siteName": ["35COLO", "35SALES"]
-        # },
-        # {
-        #     "Name": "Site HWLAB",
-        #     "groupBy": "siteName",
-        #     "siteName": ["HWLAB"]
-        # }
+        {
+            "Name": input_site,
+            "groupBy": "siteName",
+            "siteName": [input_site]
+        }
     ]
 
     # Prepare the context data to be inserted into the HTML template
@@ -74,14 +73,13 @@ def main():
         # Time
         'formatted_time': formatted_time,
 
-        # Network data summary
+        # Instance Information
         'system_url': data_source.system_url,
         'os_version': data_source.os_version,
         'snapshot_id': data_source.snapshot_id,
         'snapshot_name': data_source.snapshot_name,
+        # Network data summary
         'network_devices': data_source.network_devices,
-        'network_interfaces': data_source.network_interfaces,
-        'network_sites': data_source.network_sites,
         'network_hosts': data_source.network_hosts,
 
         # Network vendors
@@ -132,10 +130,8 @@ def main():
         'wireless_radios_ssid_summary': data_source.stp_instances,
         'wireless_clients': data_source.stp_neighbors,
 
-        # Path Compliance
-        'path_context': transform_path_result(server_url, token, path_params_list),
         # Topology
-        'topology_context': transform_topology_result(server_url, token, topology_list, snapshot_id_01) if topology_list else ""
+        'topology_context': transform_topology_result(server_url, token, topology_list, snapshot_id) if topology_list else ""
     }
     # set_trace()
     # Save rendered HTML to a file

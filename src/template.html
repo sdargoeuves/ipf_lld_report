@@ -31,7 +31,7 @@
     </div>
     <div class="main-title-container">
         <div class="numbers">1</div>
-        <h2 class="main-titles">Network data summary</h2>
+        <h2 class="main-titles">Instance Information</h2>
     </div>
     <table>
       <tr>
@@ -50,29 +50,37 @@
         <th>Snapshot ID</th>
         <td>{{ snapshot_id }}</td>
       </tr>
-      <tr>
-        <th>Network sites/groups</th>
-        <td>{{ network_sites }} {% if network_sites_delta is defined %}({% if network_sites_delta > 0 %}+{% endif %}{{ network_sites_delta }}){% endif %}</td>
-      </tr>
-      <tr>
-        <th>Network devices</th>
-        <td>{{ network_devices }} {% if network_devices_delta is defined %}({% if network_devices_delta > 0 %}+{% endif %}{{ network_devices_delta }}){% endif %}</td>
-      </tr>
+    </table>
+    <div class="main-title-container">
+      <div class="numbers">2</div>
+      <h2 class="main-titles">Network data summary</h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Hostname</th>
+          <th>FQDN</th>
+          <th>Domain</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for device in network_devices %}
+          <tr>
+            <td>{{ device.hostname }}</td>
+            <td>{{ device.fqdn or '-' }}</td>
+            <td>{{ device.domain or '-' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <table>
       <tr>
         <th>Network interfaces</th>
-        <td>{{ network_interfaces }} {% if network_interfaces_delta is defined %}({% if network_interfaces_delta > 0 %}+{% endif %}{{ network_interfaces_delta }}){% endif %}</td>
+        <td>{{ network_interfaces }}</td>
       </tr>
       <tr>
         <th>Network hosts/IP endpoints</th>
-        <td>{{ network_hosts }} {% if network_hosts_delta is defined %}({% if network_hosts_delta > 0 %}+{% endif %}{{ network_hosts_delta }}){% endif %}</td>
-      </tr>
-      <tr>
-        <th>VLANs</th>
-        <td>{{ vlans }} {% if vlans_delta is defined %}({% if vlans_delta > 0 %}+{% endif %}{{ vlans_delta }}){% endif %}</td>
-      </tr>
-      <tr>
-        <th>VRFs</th>
-        <td>{{ vrfs }} {% if vrfs_delta is defined %}({% if vrfs_delta > 0 %}+{% endif %}{{ vrfs_delta }}){% endif %}</td>
+        <td>{{ network_hosts }}</td>
       </tr>
     </table>
     <div class="main-title-container">
