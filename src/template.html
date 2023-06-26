@@ -20,7 +20,7 @@
   <div class="container">
     <div class="section-1">
       <div class="icon-container">
-        <div class="section-title"> IP Fabric Data Overview</div>
+        <div class="section-title"> IP Fabric Overview - Site `{{ site }}`</div>
       </div>
       <div>
         The IP Fabric data report presents a comprehensive network infrastructure analysis, providing detailed insights
@@ -58,6 +58,9 @@
     <table>
       <thead>
         <tr>
+          <th colspan="3", style="text-align: center;">Device Inventory</th>
+        </tr>
+        <tr>
           <th>Hostname</th>
           <th>FQDN</th>
           <th>Domain</th>
@@ -73,58 +76,13 @@
         {% endfor %}
       </tbody>
     </table>
+    <br>
     <table>
-      <tr>
-        <th>Network interfaces</th>
-        <td>{{ network_interfaces }}</td>
-      </tr>
       <tr>
         <th>Network hosts/IP endpoints</th>
         <td>{{ network_hosts }}</td>
       </tr>
     </table>
-    <div class="main-title-container">
-      <div class="numbers">2</div>
-      <h2 class="main-titles">Network vendors</h2>
-    </div>
-    <div class="section-2">
-      <div>
-        This report provides key statistical data on network vendors in two snapshots, showing the number of devices by
-        vendor and the changes in the number of devices over time.
-      </div>
-      <table class="table-spacing">
-        <thead>
-          <tr>
-            <th class="table-cell-width-even">Vendor</th>
-            <th class="table-cell-width-even">Devices count</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for vendor in vendors %}
-          <tr>
-            <td class="table-cell-width">{{ vendor.devicesCount }}</td>
-            <td class="table-cell-width">{{ vendor.familiesCount }}</td>
-          </tr>
-        {% endfor %}
-        </tbody>
-        <thead>
-          <tr>
-            <th class="table-cell-width-even">Models count</th>
-            <th class="table-cell-width-even">Platforms count</th>
-            <th class="table-cell-width-even">Families count</th>
-          </tr>
-        </thead>
-        <tbody class="table-spacing">
-          {% for vendor in vendors %}
-          <tr>
-            <td class="table-cell-width">{{ vendor.vendor }}</td>
-            <td class="table-cell-width">{{ vendor.modelsCount }}</td>
-            <td class="table-cell-width">{{ vendor.platformsCount }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
     <div class="main-title-container">
       <div class="numbers">3</div>
       <h2 class="main-titles">Interfaces overview</h2>
@@ -135,45 +93,69 @@
       also includes information on channel interfaces and the number of IPv4 and IPv6 tunnel interfaces. Finally, it
       provides details on the number of IPsec tunnels and gateways.
     </div>
-    <table>
-      <tr>
-        <th>Network interfaces</th>
-        <td>{{ network_interfaces }} 
-      </td>
-      </tr>
-      <tr>
-        <th>Active interfaces</th>
-        <td>{{ interfaces_active }}</td>
-      </tr>
-      <tr>
-        <th>Edge interfaces</th>
-        <td>{{ interfaces_edge }}</td>
-      </tr>
-      <tr>
-        <th>Switchport interfaces</th>
-        <td>{{ interfaces_switchport }}</td>
-      </tr>
-      <tr>
-        <th>Channel interfaces</th>
-        <td>{{ interfaces_channels }}</td>
-      </tr>
-      <tr>
-        <th>IPv4 Tunnel interfaces</th>
-        <td>{{ interfaces_tunnels_ipv4 }}</td>
-      </tr>
-      <tr>
-        <th>IPv6 Tunnel interfaces</th>
-        <td>{{ interfaces_tunnels_ipv6 }}</td>
-      </tr>
-      <tr>
-        <th>IPsec Gateways</th>
-        <td>{{ ipsec_gateways }}</td>
-      </tr>
-      <tr>
-        <th>IPsec tunnels</th>
-        <td>{{ ipsec_tunnels }}</td>
-      </tr>
-    </table>
+    <div class="div-spacing">
+      <table>
+        <tr>
+          <th>Network interfaces</th>
+        </tr>
+        <tr>
+          <th>Interfaces Count</th>
+          <td>{{ interfaces_count }}</td>
+        </tr>
+        <tr>
+          <th>Switchport interfaces</th>
+          <td>{{ interfaces_switchport }}</td>
+        </tr>
+        <tr>
+          <th>Channel interfaces</th>
+          <td>{{ interfaces_channels }}</td>
+        </tr>
+        <tr>
+          <th>IPv4 Tunnel interfaces</th>
+          <td>{{ interfaces_tunnels_ipv4 }}</td>
+        </tr>
+        <tr>
+          <th>IPv6 Tunnel interfaces</th>
+          <td>{{ interfaces_tunnels_ipv6 }}</td>
+        </tr>
+        <tr>
+          <th>IPsec Gateways</th>
+          <td>{{ ipsec_gateways }}</td>
+        </tr>
+        <tr>
+          <th>IPsec tunnels</th>
+          <td>{{ ipsec_tunnels }}</td>
+        </tr>
+      </table>
+    </div>
+    <br>
+    <div class="div-spacing">
+      <table>
+        <thead>
+          <tr>
+            <th colspan="5", style="text-align: center;">Half Duplex interfaces</th>
+          </tr>
+          <tr>
+            <th>Hostname</th>
+            <th>Interface</th>
+            <th>Speed</th>
+            <th>Duplex</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for interface in interfaces_duplex %}
+            <tr>
+              <td>{{ interface.hostname }}</td>
+              <td>{{ interface.intName or '-' }}</td>
+              <td>{{ interface.speed or '-' }}</td>
+              <td>{{ interface.duplex.data or '-' }}</td>
+              <td>{{ interface.dscr.data or '-' }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
     <div class="main-title-container">
       <div class="numbers">4</div>
       <h2 class="main-titles">Addressing overview</h2>
@@ -184,15 +166,11 @@
       (ARP) tables, and Virtual Route Forwarding (VRF) instances. The first number indicates the current value, and the
       second number represents the change between two snapshots. This section provides valuable insights into the growth
       and changes in network addressing over time.
-    </div>
+    </div class="div-spacing">
     <table>
       <tr>
         <th>Managed networks</th>
         <td>{{ managed_networks }}</td>
-      </tr>
-      <tr>
-        <th>VRFs</th>
-        <td>{{ vrfs }}</td>
       </tr>
       <tr>
         <th>IPv4 interfaces</th>
@@ -211,6 +189,40 @@
         <td>{{ mac }}</td>
       </tr>
     </table>
+    <br>
+    <div class="div-spacing">
+      <table>
+        <thead>
+          <tr>
+            <th colspan="8", style="text-align: center;">List of Managed IP addresses</th>
+          </tr>
+          <tr>
+            <th>Hostname</th>
+            <th>Interface</th>
+            <th>L1 State</th>
+            <th>L2 State</th>
+            <th>IP</th>
+            <th>Network</th>
+            <th>Type</th>
+            <th>VRF</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for interface in ipv4_interfaces_list %}
+            <tr>
+              <td>{{ interface.hostname }}</td>
+              <td>{{ interface.intName or '-' }}</td>
+              <td>{{ interface.stateL1 or '-' }}</td>
+              <td>{{ interface.stateL2 or '-' }}</td>
+              <td>{{ interface.ip or '-' }}</td>
+              <td>{{ interface.net or '-' }}</td>
+              <td>{{ interface.type or '-' }}</td>
+              <td>{{ interface.vrf or '-' }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
     <div class="main-title-container">
       <div class="numbers">5</div>
       <h2 class="main-titles">Switching overview</h2>
@@ -267,7 +279,6 @@
         <th>IPv4 routes</th>
         <td>{{ routes_ipv4 }}</td>
       </tr>
-
       <tr>
         <th>IPv6 routes</th>
         <td>{{ routes_ipv6 }}</td>
@@ -287,6 +298,11 @@
       <tr>
         <th>Connected routes</th>
         <td>{{ routes_connected }}</td>
+      </tr>
+      <tr>
+        <th>Default Gateway</th>
+        <td>{{ routes_dgw }}</td>
+      </tr>
       <tr>
         <th>EIGRP routes</th>
         <td>{{ routes_eigrp }}</td>
@@ -338,42 +354,6 @@
     </table>
     <div class="main-title-container">
       <div class="numbers">8</div>
-      <h1 class="main-titles" style="page-break-before: always;">Simulation Compliance</h1>
-    </div>
-    {% if path_context %}
-      <div class="section-8">
-        Path Compliance is a critical aspect of network management that helps ensure the proper functioning of network
-        paths
-        and their compliance with organizational policies. This section provides an overview of the compliance status of
-        network paths and associated details, such as source and destination IP addresses, ports, and protocols. The
-        section
-        includes a list of network paths that have been tested and their corresponding graphical representations in the
-        form
-        of SVG images. By analyzing the compliance data and SVG images, network administrators can identify and address
-        issues affecting the network's performance and security.
-      </div>
-      {% for params in path_context %}
-        <h4>Path simulation data</h4>
-        <table>
-          {% for key, value in params['data'].items() %}
-          <tr>
-            <th class="table-cell-width-even">{{ key|capitalize }}</th>
-            <td>{{ value }}</td>
-          </tr>
-          {% endfor %}
-        </table>
-        <h5>Path simulation result</h5>
-        <div class="path_svg">
-          <img src="{{ params['result']['svg'] }}" alt="Path result" style="width: 100%;">
-        </div>
-      {% endfor %}
-    {% else %}
-    <div class="section-8">
-      No Pathlookup specified.
-    </div>
-    {% endif %}
-    <div class="main-title-container">
-      <div class="numbers">9</div>
       <h1 class="main-titles" style="page-break-before: always;">Site Topology</h1>
     </div>
     {% if topology_context %}
