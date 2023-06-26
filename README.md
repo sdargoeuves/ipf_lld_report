@@ -43,7 +43,6 @@ This will create an instance of the DataSource class and populate its attributes
 
 Enter the name of the site you want to create the report for, and the topology will be the default layout for this site.
 
-
 ## Report Contents
 
 The report contains the following sections:
