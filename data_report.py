@@ -1,6 +1,5 @@
 # Import the required modules
 import os
-import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -72,6 +71,7 @@ def main():
     formatted_time = current_time.strftime("%Y-%m-%d-%H-%M")
 
     # HTML, PDF and CSS file paths
+    os.makedirs("export", exist_ok=True)
     html_file_path = Path(f"export/IPF-Report-{formatted_time}.html")
     pdf_file_path = Path(f"export/IPF-Report-{formatted_time}.pdf")
     css_file_path = Path("src/style.css")
