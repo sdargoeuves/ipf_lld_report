@@ -1,6 +1,6 @@
 # IP Fabric Data Report Generator
 
-This Python script generates a health report for a network using data from two data sources (snapshots). It uses IP Fabric's SDK to fetch data and Jinja2 and HTML to create report, which is then exported to PDF. 
+This Python script generates a LLD report for a network using data from IP Fabric. It uses IP Fabric's SDK to fetch data and Jinja2 and HTML to create report, which is then exported to PDF.
 
 ## Requirements
 
